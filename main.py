@@ -1,21 +1,127 @@
-import requests
 import json
-import pandas as pd
+import random
+import requests
 
+from secrets import ALPHA_VANTAGE_API_KEY
 
-# API Key: AgBYFvqpC2sc6UqooUS3OPCRuw9qp6dB
-# Get data for a specific stock over a given range
-r = requests.get('https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2021-07-22/2021-07-22?adjusted=true&sort=asc&limit=120&apiKey=AgBYFvqpC2sc6UqooUS3OPCRuw9qp6dB')
-response_data = r.json()
+def query_time_series_intraday_api(symbol, interval='60min', adjusted='true'):
+    function = 'TIME_SERIES_INTRADAY'
+    key = ALPHA_VANTAGE_API_KEY
+    
+    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
+    r = requests.get(url)
+    data = r.json()
 
-print(f'JSON is: {response_data}')
-print(response_data.get('results'))
-# c (close), h (highest), l (lowest), n (number of transactions), o (open), otc (OTC ticker or not), t (timestamp), v (trading volume), vw (volume weighted average price)
+    print(json.dumps(data, indent=4))
 
+    return data
 
-r = requests.get('https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/2022-10-14?adjusted=true&apiKey=AgBYFvqpC2sc6UqooUS3OPCRuw9qp6dB')
-response_data = r.json()
-print(f'JSON is: {response_data}')
-print(response_data.get('results'))
+def main():
 
-df = pd.DataFrame(response_data['results'])
+    nasdaq_100 = ['AAPL',
+        'NVDA',
+        'MSFT',
+        'AMZN',
+        'GOOG',
+        'GOOGL',
+        'META',
+        'AVGO',
+        'TSLA',
+        'COST',
+        'NFLX',
+        'TMUS',
+        'ASML',
+        'CSCO',
+        'AZN',
+        'LIN',
+        'PLTR',
+        'PEP',
+        'ISRG',
+        'ADBE',
+        'TXN',
+        'QCOM',
+        'INTU',
+        'AMD',
+        'PDD',
+        'BKNG',
+        'AMGN',
+        'ARM',
+        'GILD',
+        'HON',
+        'AMAT',
+        'CMCSA',
+        'SBUX',
+        'ADP',
+        'PANW',
+        'VRTX',
+        'ADI',
+        'APP',
+        'MELI',
+        'MU',
+        'LRCX',
+        'INTC',
+        'KLAC',
+        'CRWD',
+        'ABNB',
+        'CEG',
+        'FTNT',
+        'DASH',
+        'CTAS',
+        'MRVL',
+        'MDLZ',
+        'MAR',
+        'ORLY',
+        'REGN',
+        'TEAM',
+        'SNPS',
+        'WDAY',
+        'PYPL',
+        'CDNS',
+        'MSTR',
+        'ROP',
+        'CSX',
+        'ADSK',
+        'NXPI',
+        'AEP',
+        'CHTR',
+        'PCAR',
+        'CPRT',
+        'PAYX',
+        'MNST',
+        'ROST',
+        'KDP',
+        'LULU',
+        'FANG',
+        'EXC',
+        'AXON',
+        'BKR',
+        'FAST',
+        'CTSH',
+        'GEHC',
+        'VRSK',
+        'XEL',
+        'CCEP',
+        'DDOG',
+        'ODFL',
+        'IDXX',
+        'TTWO',
+        'KHC',
+        'TTD',
+        'DXCM',
+        'EA',
+        'MCHP',
+        'CSGP',
+        'ZS',
+        'ANSS',
+        'WBD',
+        'CDW',
+        'GFS',
+        'ON',
+        'BIIB',
+    ]
+
+    chosen_symbols = random.choices(nasdaq_100, k=20)
+    stock_data = {symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbols}
+
+if __name__ == '__main__':
+    main()
