@@ -171,3 +171,4 @@ cython_debug/
 .pypirc
 
 secrets.py
+test.ipynb

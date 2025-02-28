@@ -16,6 +16,21 @@ def query_time_series_intraday_api(symbol, interval='60min', adjusted='true'):
 
     return data
 
+def process_data(data, symbol, interval):
+
+    time_series = data[symbol][f'Time Series ({interval})']
+    for k, v in time_series.items():
+        if '1. ' in k:
+            v = v.replace('1. ', '')
+        elif '2. ' in v:
+            v = v.replace('2. ', '')
+        elif '3. ' in v:
+            v = v.replace('3. ', '')
+        elif '4. ' in v:
+            v = v.replace('4. ', '')
+        elif '5. ' in v:
+            v = v.replace('5. ', '')
+
 def main():
 
     nasdaq_100 = ['AAPL',
