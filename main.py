@@ -18,18 +18,24 @@ def query_time_series_intraday_api(symbol, interval='60min', adjusted='true'):
 
 def process_data(data, symbol, interval):
 
+    print(data)
     time_series = data[symbol][f'Time Series ({interval})']
     for k, v in time_series.items():
         if '1. ' in k:
-            v = v.replace('1. ', '')
+            k[v] = v.replace('1. ', '')
         elif '2. ' in v:
-            v = v.replace('2. ', '')
+            k[v] = v.replace('2. ', '')
         elif '3. ' in v:
-            v = v.replace('3. ', '')
+            k[v] = v.replace('3. ', '')
         elif '4. ' in v:
-            v = v.replace('4. ', '')
+           k[v] = v.replace('4. ', '')
         elif '5. ' in v:
-            v = v.replace('5. ', '')
+            k[v] = v.replace('5. ', '')
+
+    # stocks_df = pd.DataFrame(time_series)
+
+    # return stocks_df
+    return time_series
 
 def main():
 
@@ -135,8 +141,11 @@ def main():
         'BIIB',
     ]
 
-    chosen_symbols = random.choices(nasdaq_100, k=20)
-    stock_data = {symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbols}
+    chosen_symbol = random.choices(nasdaq_100, k=1)
+    stock_data = {symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbol}
+
+    stocks_df = process_data(stock_data, chosen_symbol, '60min')
+    print(stock_data.head())
 
 if __name__ == '__main__':
     main()
