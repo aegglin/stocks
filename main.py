@@ -16,26 +16,21 @@ def query_time_series_intraday_api(symbol, interval='60min', adjusted='true'):
 
     return data
 
-def process_data(data, symbol, interval):
+def clean_data(data, symbol, interval):
 
-    print(data)
     time_series = data[symbol][f'Time Series ({interval})']
-    for k, v in time_series.items():
-        if '1. ' in k:
-            k[v] = v.replace('1. ', '')
-        elif '2. ' in v:
-            k[v] = v.replace('2. ', '')
-        elif '3. ' in v:
-            k[v] = v.replace('3. ', '')
-        elif '4. ' in v:
-           k[v] = v.replace('4. ', '')
-        elif '5. ' in v:
-            k[v] = v.replace('5. ', '')
+    for date, values in time_series.items():
 
-    # stocks_df = pd.DataFrame(time_series)
+        cleaned_dict = {}
 
-    # return stocks_df
-    return time_series
+        for stat_name, value in values.items():
+            stat_name = stat_name.replace('1. ', '').replace('2. ', '').replace('3. ', '').replace('4. ', '').replace('5. ', '')
+            cleaned_dict[stat_name] = value
+
+        time_series[date] = cleaned_dict
+
+
+    return pd.DataFrame(time_series)
 
 def main():
 
@@ -141,10 +136,10 @@ def main():
         'BIIB',
     ]
 
-    chosen_symbol = random.choices(nasdaq_100, k=1)
+    chosen_symbol = random.choices(nasdaq_100, k=1) # temporarily use one symbol to test
     stock_data = {symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbol}
 
-    stocks_df = process_data(stock_data, chosen_symbol, '60min')
+    stocks_df = clean_data(stock_data, chosen_symbol, '60min')
     print(stock_data.head())
 
 if __name__ == '__main__':
