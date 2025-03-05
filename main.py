@@ -5,8 +5,9 @@ import random
 import requests
 import pandas as pd
 
-from secrets import ALPHA_VANTAGE_API_KEY
+from api_keys import ALPHA_VANTAGE_API_KEY
 
+log = logging.getLogger(__name__)
 
 def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
     function = "TIME_SERIES_INTRADAY"
@@ -171,7 +172,7 @@ def main():
         symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbols
     }
 
-    stocks_df = clean_data(stock_data, chosen_symbol[0], "60min")
+    stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
     log.info(stocks_df.head())
 
 
