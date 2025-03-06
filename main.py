@@ -1,4 +1,4 @@
-import logging
+
 import json
 import random
 
@@ -7,8 +7,9 @@ import pandas as pd
 
 from api_keys import ALPHA_VANTAGE_API_KEY
 from nasdaq import nasdaq_100
+from log import get_log
 
-log = logging.getLogger(__name__)
+log = get_log()
 
 def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
     function = "TIME_SERIES_INTRADAY"
@@ -18,7 +19,7 @@ def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
     r = requests.get(url)
     data = r.json()
 
-    log.info(json.dumps(data, indent=4))
+    # log.info(json.dumps(data, indent=4))
 
     return data
 
@@ -71,7 +72,7 @@ def main():
     }
 
     stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
-    log.info(stocks_df.head())
+    # log.info(stocks_df.head())
 
 
 if __name__ == "__main__":
