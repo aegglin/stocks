@@ -2,8 +2,9 @@
 import json
 import random
 
-import requests
+import matplotlib.pyplot as plt
 import pandas as pd
+import requests
 
 from api_keys import ALPHA_VANTAGE_API_KEY
 from nasdaq import nasdaq_100
@@ -53,13 +54,40 @@ def clean_data(data, symbol, interval):
     return stocks_df
 
 
-def show_graphs(df):
+def show_graphs(df, symbol):
+    
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(15, 7))
+    ax1, ax2, ax3, ax4 = ax.flatten()
 
-    plt.style.use('fivethirtyeight')
-    y1 = 'open'
+    ax1.set_title(f'{symbol} Price at Open')
+    ax1.set_xlabel('$x$ -- Date')
+    ax1.set_ylabel('$y$ -- Price at Open')
+    ax1.tick_params("x", rotation=45)
+    ax1.plot(df.index, df['open'])
 
-    fig, ax = plt.subplots()
-    ax.plot(df.index, df['open'])
+    ax2.set_title(f'{symbol} High Price')
+    ax2.set_xlabel('$x$ -- Date')
+    ax2.set_ylabel('$y$ -- High Price')
+    ax2.tick_params("x", rotation=45)
+    ax2.yaxis.tick_right()
+    ax2.plot(df.index, df['high'])
+
+    ax3.set_title(f'{symbol} Low Price')
+    ax3.set_xlabel('$x$ -- Date')
+    ax3.set_ylabel('$y$ -- Low Price')
+    ax3.tick_params("x", rotation=45)
+    ax3.plot(df.index, df['low'])
+
+    ax4.set_title(f'{symbol} Price at Close')
+    ax4.set_xlabel('$x$ -- Date')
+    ax4.set_ylabel('$y$ -- Price at Close')
+    ax4.tick_params("x", rotation=45)
+    ax4.yaxis.tick_right()
+    ax4.plot(df.index, df['close'])
+
+
+    fig.tight_layout()
+
     plt.show()
 
 def main():
@@ -73,6 +101,8 @@ def main():
 
     stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
     # log.info(stocks_df.head())
+
+    show_graphs(stocks_df, chosen_symbols[0])
 
 
 if __name__ == "__main__":
