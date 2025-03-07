@@ -54,41 +54,53 @@ def clean_data(data, symbol, interval):
     return stocks_df
 
 
-def show_graphs(df, symbol):
+def graph_symbol_matplotlib(symbol, df):
     
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(15, 7))
     ax1, ax2, ax3, ax4 = ax.flatten()
 
     ax1.set_title(f'{symbol} Price at Open')
     ax1.set_xlabel('$x$ -- Date')
+    ax1.set_xlim(xmin=df.index.min(), xmax=df.index.max())
     ax1.set_ylabel('$y$ -- Price at Open')
+    ax1.set_ylim(ymin=df['open'].min(), ymax=df['open'].max())
     ax1.tick_params("x", rotation=45)
-    ax1.plot(df.index, df['open'])
+    ax1.plot(df.index, df['open'], color='#FD8A8A', linewidth=3)
+    ax1.grid()
 
     ax2.set_title(f'{symbol} High Price')
     ax2.set_xlabel('$x$ -- Date')
+    ax2.set_xlim(xmin=df.index.min(), xmax=df.index.max())
     ax2.set_ylabel('$y$ -- High Price')
+    ax2.set_ylim(ymin=df['high'].min(), ymax=df['high'].max())
     ax2.tick_params("x", rotation=45)
     ax2.yaxis.tick_right()
-    ax2.plot(df.index, df['high'])
+    ax2.plot(df.index, df['high'], color='#F1F7B5', linewidth=3)
+    ax2.grid()
 
     ax3.set_title(f'{symbol} Low Price')
     ax3.set_xlabel('$x$ -- Date')
+    ax3.set_xlim(xmin=df.index.min(), xmax=df.index.max())
     ax3.set_ylabel('$y$ -- Low Price')
+    ax3.set_ylim(ymin=df['low'].min(), ymax=df['low'].max())
     ax3.tick_params("x", rotation=45)
-    ax3.plot(df.index, df['low'])
+    ax3.plot(df.index, df['low'], color='#ABD1D1', linewidth=3)
+    ax3.grid()
 
     ax4.set_title(f'{symbol} Price at Close')
     ax4.set_xlabel('$x$ -- Date')
+    ax4.set_xlim(xmin=df.index.min(), xmax=df.index.max())
     ax4.set_ylabel('$y$ -- Price at Close')
+    ax4.set_ylim(ymin=df['close'].min(), ymax=df['close'].max())
     ax4.tick_params("x", rotation=45)
     ax4.yaxis.tick_right()
-    ax4.plot(df.index, df['close'])
-
+    ax4.plot(df.index, df['close'], color='#9EA1D4', linewidth=3)
+    ax4.grid()
 
     fig.tight_layout()
 
     plt.show()
+
 
 def main():
 
@@ -100,9 +112,9 @@ def main():
     }
 
     stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
-    # log.info(stocks_df.head())
 
-    show_graphs(stocks_df, chosen_symbols[0])
+    graph_symbol_matplotlib(chosen_symbols[0], stocks_df)
+
 
 
 if __name__ == "__main__":
