@@ -1,4 +1,3 @@
-
 import json
 import random
 
@@ -13,7 +12,6 @@ from log import get_log
 log = get_log()
 
 def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
-    function = "TIME_SERIES_INTRADAY"
     key = ALPHA_VANTAGE_API_KEY
 
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
@@ -59,6 +57,7 @@ def graph_symbol_matplotlib(symbol, df):
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=(15, 7))
     ax1, ax2, ax3, ax4 = ax.flatten()
 
+    # Configure the first graph
     ax1.set_title(f'{symbol} Price at Open')
     ax1.set_xlabel('$x$ -- Date')
     ax1.set_xlim(xmin=df.index.min(), xmax=df.index.max())
@@ -68,6 +67,7 @@ def graph_symbol_matplotlib(symbol, df):
     ax1.plot(df.index, df['open'], color='#FD8A8A', linewidth=3)
     ax1.grid()
 
+    # Configure the second graph
     ax2.set_title(f'{symbol} High Price')
     ax2.set_xlabel('$x$ -- Date')
     ax2.set_xlim(xmin=df.index.min(), xmax=df.index.max())
@@ -78,6 +78,7 @@ def graph_symbol_matplotlib(symbol, df):
     ax2.plot(df.index, df['high'], color='#F1F7B5', linewidth=3)
     ax2.grid()
 
+    # Configure the third graph
     ax3.set_title(f'{symbol} Low Price')
     ax3.set_xlabel('$x$ -- Date')
     ax3.set_xlim(xmin=df.index.min(), xmax=df.index.max())
@@ -87,6 +88,7 @@ def graph_symbol_matplotlib(symbol, df):
     ax3.plot(df.index, df['low'], color='#ABD1D1', linewidth=3)
     ax3.grid()
 
+    # Configure the fourth graph
     ax4.set_title(f'{symbol} Price at Close')
     ax4.set_xlabel('$x$ -- Date')
     ax4.set_xlim(xmin=df.index.min(), xmax=df.index.max())
