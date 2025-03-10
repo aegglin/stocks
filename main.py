@@ -5,9 +5,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 
-from api_keys import ALPHA_VANTAGE_API_KEY
+from secret_data import ALPHA_VANTAGE_API_KEY
 from nasdaq import nasdaq_100
 from log import get_log
+
 
 log = get_log()
 

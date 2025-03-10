@@ -170,5 +170,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-api_keys.py
+secret_data.py
 test.ipynb
