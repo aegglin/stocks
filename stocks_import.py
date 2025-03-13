@@ -11,6 +11,8 @@ class StockSymbol(Base):
     long_name = mapped_column(String(50), nullable=False)
     short_name = mapped_column(String(50), nullable=False)
 
+    stock_prices = relationship('stock_price')
+
     def __repr__(self):
         return f"StockSymbol(StockSymbolId={self.stock_symbol_id!r}, StockSymbol={self.stock_symbol!r}, SymbolLongName={self.long_name!r}, SymbolShortName={self.short_name!r})"
     
