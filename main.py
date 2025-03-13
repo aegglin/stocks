@@ -8,6 +8,8 @@ import requests
 from secret_data import ALPHA_VANTAGE_API_KEY
 from nasdaq import nasdaq_100
 from log import get_log
+from models import StockSymbol
+from stocks_db import Connection
 
 
 log = get_log()
@@ -115,9 +117,18 @@ def main():
     }
 
     stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
-
     graph_symbol_matplotlib(chosen_symbols[0], stocks_df)
 
+    connection = Connection()
+    with connection._session as session:
+        test = StockSymbol(
+        Symbol="MDUP", 
+        LongName="Made Up, Inc.",
+        ShortName="Made Up"
+    )
+    session.add(test)
+    session.commit()
+    
 
 
 if __name__ == "__main__":
