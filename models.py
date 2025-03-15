@@ -15,7 +15,7 @@ class StockSymbol(Base):
     # Class to be related, name of matching SQLAlchemy column in other table
     # Plural to indicate that a stock symbol can have multiple stock prices (many to one)
     # stock_prices = relationship('StockPrice', back_populates='stock_symbol_id')
-    # stock_prices = relationship('stock_price')
+    stock_prices = relationship('stock_price')
 
     def __repr__(self):
         return f"StockSymbol(StockSymbolId={self.StockSymbolId!r}, StockSymbol={self.Symbol!r}, SymbolLongName={self.LongName!r}, SymbolShortName={self.ShortName!r})"
@@ -32,8 +32,8 @@ class StockPrice(Base):
 
     # Class to be related, name of matching SQLAlchemy column in other table
     # Singular to indicate that a stock price has one stock symbol (one to many)
-    stock_symbol = relationship('StockSymbol', back_populates='stock_symbol_id')
-    # stock_symbol = relationship('stock_symbol')
+    # stock_symbol = relationship('StockSymbol', back_populates='stock_symbol_id')
+    stock_symbol = relationship('stock_symbol')
     dates = relationship('dates')
 
     def __repr__(self):
