@@ -12,43 +12,46 @@ class StockSymbol(Base):
     LongName = mapped_column(String(50), nullable=False)
     ShortName = mapped_column(String(50), nullable=False)
 
-    # Class to be related, name of matching SQLAlchemy column in other table
-    # Plural to indicate that a stock symbol can have multiple stock prices (many to one)
-    # stock_prices = relationship('StockPrice', back_populates='stock_symbol_id')
-    stock_prices = relationship('stock_price')
+    # Class name to be related, name of matching SQLAlchemy column in other table, back_populates is the name of the relationship in the other class
+    stock_prices = relationship('StockPrice', back_populates='stock_symbol')
 
     def __repr__(self):
         return f"StockSymbol(StockSymbolId={self.StockSymbolId!r}, StockSymbol={self.Symbol!r}, SymbolLongName={self.LongName!r}, SymbolShortName={self.ShortName!r})"
-    
+
 
 class StockPrice(Base):
     __table_args__ = {'schema': 'Fact'}
-    __tablename__ = 'stock_price'
+    __tablename__ = 'StockPrices'
 
-    stock_price_id = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date_id = mapped_column(Integer, ForeignKey('dates.date_id'))
-    stock_symbol_id = mapped_column(Integer, ForeignKey('stock_symbol.stock_symbol_id'))
-    stock_price = mapped_column(Float, nullable=False)
+    StockPriceId = mapped_column(Integer, primary_key=True, autoincrement=True)
+    DateId = mapped_column(Integer, ForeignKey('Dim.Dates.Date'))
 
-    # Class to be related, name of matching SQLAlchemy column in other table
-    # Singular to indicate that a stock price has one stock symbol (one to many)
-    # stock_symbol = relationship('StockSymbol', back_populates='stock_symbol_id')
-    stock_symbol = relationship('stock_symbol')
-    dates = relationship('dates')
+    # Foreign key refers to the tablename, not the class. Must have the schema in the relationship
+    StockSymbolId = mapped_column(Integer, ForeignKey('Dim.StockSymbols.StockSymbolId'))
+    StockPrice = mapped_column(Float, nullable=False)
+
+    # Class name to be related, name of matching SQLAlchemy column in other table, back_populates is the name of the relationship
+    stock_symbol = relationship('StockSymbol', back_populates='stock_prices')
+    dates = relationship('Date', back_populates='stock_prices')
 
     def __repr__(self):
-        return f"StockPrice(StockPriceId={self.stock_price_id!r}, StockSymbolId={self.stock_symbol_id!r}), StockPrice={self.stock_price!r}"
+        return f"StockPrice(StockPriceId={self.StockPriceId!r}, StockSymbolId={self.StockSymbolId!r}), StockPrice={self.StockPrice!r}"
 
 
 class Date(Base):
     __table_args__ = {'schema': 'Dim'}
-    __tablename__ = 'dates'
+    __tablename__ = 'Dates'
 
-    date_id = mapped_column(Integer, primary_key=True, autoincrement=True)
-    date = mapped_column(DateTime, nullable=False)
-    year = mapped_column(Integer, nullable=False)
-    month = mapped_column(Integer, nullable=False)
-    day = mapped_column(Integer, nullable=False)
+    DateId = mapped_column(Integer, primary_key=True, autoincrement=True)
+    Date = mapped_column(DateTime, nullable=False)
+    Year = mapped_column(Integer, nullable=False)
+    Month = mapped_column(Integer, nullable=False)
+    Day = mapped_column(Integer, nullable=False)
+    Month = mapped_column(String(9), nullable=False)
+    WeekDay = mapped_column(String(9), nullable=False)
+
+    # Class name to be related, name of matching SQLAlchemy column in other table, back_populates is the name of the relationship
+    stock_prices = relationship('StockPrice', back_populates='dates')
 
     def __repr__(self):
-        return f"Date(DateId={self.date_id!r}, Date={self.date}, Year={self.year}, Month={self.month}, Day={self.Day})"
+        return f"Date(DateId={self.DateId!r}, Date={self.Date}, Year={self.Year}, Month={self.Month}, Day={self.Day}, MonthName={self.MonthName}, WeekDay={self.WeekDay})"

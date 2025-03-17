@@ -8,7 +8,7 @@ import requests
 from secret_data import ALPHA_VANTAGE_API_KEY
 from nasdaq import nasdaq_100
 from log import get_log
-from models import StockSymbol
+from models import StockSymbol, StockPrice
 from stocks_db import Connection
 
 
@@ -121,12 +121,12 @@ def main():
 
     connection = Connection()
     with connection._session as session:
-        test = StockSymbol(
-        Symbol="MDUP", 
-        LongName="Made Up, Inc.",
-        ShortName="Made Up"
-    )
-    session.add(test)
+        test_symbol = StockSymbol(
+            Symbol="MDUP", 
+            LongName="Made Up, Inc.",
+            ShortName="Made Up"
+        )
+    session.add(test_symbol)
     session.commit()
     
 
