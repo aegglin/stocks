@@ -47,10 +47,17 @@ def clean_data(data, symbol, interval):
     # Transpose the dataframe so the dates are rows
     stocks_df = stocks_df.T
 
+    stocks_df = stocks_df.reset_index(names='datetime')
+    stocks_df['datetime'] = pd.to_datetime(stocks_df['datetime'])
+
+    stocks_df['date'] = stocks_df['datetime'].dt.date
+    stocks_df['time'] = stocks_df['datetime'].dt.time
+
     # Update types
-    stocks_df.index = pd.to_datetime(stocks_df.index)
+    # stocks_df.index = pd.to_datetime(stocks_df.index)
     cols = ['open', 'high', 'low', 'close', 'volume']
     stocks_df[cols] = stocks_df[cols].astype(float)
+    
 
     return stocks_df
 
@@ -117,17 +124,20 @@ def main():
     }
 
     stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
-    graph_symbol_matplotlib(chosen_symbols[0], stocks_df)
+    # graph_symbol_matplotlib(chosen_symbols[0], stocks_df)
 
-    connection = Connection()
-    with connection._session as session:
-        test_symbol = StockSymbol(
-            Symbol="MDUP", 
-            LongName="Made Up, Inc.",
-            ShortName="Made Up"
-        )
-    session.add(test_symbol)
-    session.commit()
+    # connection = Connection()
+    # with connection._session as session:
+
+    #     for row in stocks_df.itertuples():
+
+    #     # test_symbol = StockSymbol(
+    #     #     Symbol="MDUP", 
+    #     #     LongName="Made Up, Inc.",
+    #     #     ShortName="Made Up"
+    #     # )
+    # session.add(test_symbol)
+    # session.commit()
     
 
 
