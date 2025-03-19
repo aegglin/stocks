@@ -4,11 +4,12 @@ import random
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
+from sqlalchemy import select
 
 from secret_data import ALPHA_VANTAGE_API_KEY
 from nasdaq import nasdaq_100
 from log import get_log
-from models import StockSymbol, StockPrice
+from models import StockSymbol, StockPrice, Date
 from stocks_db import Connection
 
 
@@ -55,7 +56,7 @@ def clean_data(data, symbol, interval):
 
     # Update types
     # stocks_df.index = pd.to_datetime(stocks_df.index)
-    cols = ['open', 'high', 'low', 'close', 'volume']
+    cols = ['Open', 'High', 'Low', 'Close', 'Volume']
     stocks_df[cols] = stocks_df[cols].astype(float)
     
 
@@ -126,18 +127,21 @@ def main():
     stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
     # graph_symbol_matplotlib(chosen_symbols[0], stocks_df)
 
-    # connection = Connection()
-    # with connection._session as session:
+    connection = Connection()
+    with connection._session as session:
+        for _, row in stocks_df.iterrows():
+            date_id_stmt = select(Date.DateId)
+            date_id_stmt = date_id_stmt.where(Date == row['date'])
+            date_id = session.execute(date_id_stmt).scalar_one()
 
-    #     for row in stocks_df.itertuples():
+            symbol_id_stmt = select(StockSymbol.StockSymbolId)
+            symbol_id_stmt = symbol_id_stmt.where(StockSymbol == row['StockSymbol'])
+            symbol_id = session.execute(symbol_id_stmt).scalar_one()
 
-    #     # test_symbol = StockSymbol(
-    #     #     Symbol="MDUP", 
-    #     #     LongName="Made Up, Inc.",
-    #     #     ShortName="Made Up"
-    #     # )
-    # session.add(test_symbol)
-    # session.commit()
+            stock_price = StockPrice(DateId=date_id, Time=row['Time'], StockSymbolId=symbol_id, High=row['High'], Low=row['Low'], Open=row['Open'], Close=row['Close'], Volume=row['Volume']) 
+
+            session.add(stock_price)
+        session.commit()
     
 
 

@@ -28,14 +28,19 @@ class StockPrice(Base):
 
     # Foreign key refers to the tablename, not the class. Must have the schema in the relationship
     StockSymbolId = mapped_column(Integer, ForeignKey('Dim.StockSymbols.StockSymbolId'))
-    StockPrice = mapped_column(Float, nullable=False)
+    HighPrice = mapped_column(Float, nullable=False)
+    LowPrice = mapped_column(Float, nullable=False)
+    OpenPrice = mapped_column(Float, nullable=False)
+    ClosePrice = mapped_column(Float, nullable=False)
+    Volume = mapped_column(Float, nullable=False)
+
 
     # Class name to be related, name of matching SQLAlchemy column in other table, back_populates is the name of the relationship
     stock_symbol = relationship('StockSymbol', back_populates='stock_prices')
     dates = relationship('Date', back_populates='stock_prices')
 
     def __repr__(self):
-        return f"StockPrice(StockPriceId={self.StockPriceId!r}, StockSymbolId={self.StockSymbolId!r}), StockPrice={self.StockPrice!r}"
+        return f"StockPrice(StockPriceId={self.StockPriceId!r}, StockSymbolId={self.StockSymbolId!r}), HighPrice={self.HighPrice!r}, LowPrice={self.LowPrice!r}, OpenPrice={self.OpenPrice!r}, ClosePrice={self.ClosePrice!r}, Volume={self.Volume!r}"
 
 
 class Date(Base):
