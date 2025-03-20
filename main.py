@@ -1,4 +1,3 @@
-import json
 import random
 
 import matplotlib.pyplot as plt
@@ -51,14 +50,16 @@ def clean_data(data, symbol, interval):
     stocks_df = stocks_df.reset_index(names='datetime')
     stocks_df['datetime'] = pd.to_datetime(stocks_df['datetime'])
 
-    stocks_df['date'] = stocks_df['datetime'].dt.date
-    stocks_df['time'] = stocks_df['datetime'].dt.time
+    stocks_df['Date'] = stocks_df['datetime'].dt.date
+    stocks_df['Time'] = stocks_df['datetime'].dt.time
 
     # Update types
     # stocks_df.index = pd.to_datetime(stocks_df.index)
-    cols = ['Open', 'High', 'Low', 'Close', 'Volume']
+    cols = ['open', 'high', 'low', 'close', 'volume']
     stocks_df[cols] = stocks_df[cols].astype(float)
-    
+
+    stocks_df = stocks_df.rename(columns= {'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume': 'Volume'})
+    stocks_df['StockSymbol'] = symbol
 
     return stocks_df
 
@@ -131,19 +132,17 @@ def main():
     with connection._session as session:
         for _, row in stocks_df.iterrows():
             date_id_stmt = select(Date.DateId)
-            date_id_stmt = date_id_stmt.where(Date == row['date'])
+            date_id_stmt = date_id_stmt.where(Date.Date == row['Date'])
             date_id = session.execute(date_id_stmt).scalar_one()
 
             symbol_id_stmt = select(StockSymbol.StockSymbolId)
-            symbol_id_stmt = symbol_id_stmt.where(StockSymbol == row['StockSymbol'])
+            symbol_id_stmt = symbol_id_stmt.where(StockSymbol.Symbol == row['StockSymbol'])
             symbol_id = session.execute(symbol_id_stmt).scalar_one()
 
-            stock_price = StockPrice(DateId=date_id, Time=row['Time'], StockSymbolId=symbol_id, High=row['High'], Low=row['Low'], Open=row['Open'], Close=row['Close'], Volume=row['Volume']) 
+            stock_price = StockPrice(DateId=date_id, Time=row['Time'], StockSymbolId=symbol_id, HighPrice=row['High'], LowPrice=row['Low'], OpenPrice=row['Open'], ClosePrice=row['Close'], Volume=row['Volume']) 
 
             session.add(stock_price)
         session.commit()
     
-
-
 if __name__ == "__main__":
     main()

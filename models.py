@@ -1,4 +1,4 @@
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Time
 from sqlalchemy.orm import declarative_base, mapped_column, relationship, sessionmaker
 
 Base = declarative_base()
@@ -33,6 +33,7 @@ class StockPrice(Base):
     OpenPrice = mapped_column(Float, nullable=False)
     ClosePrice = mapped_column(Float, nullable=False)
     Volume = mapped_column(Float, nullable=False)
+    Time = mapped_column(Time, nullable=False)
 
 
     # Class name to be related, name of matching SQLAlchemy column in other table, back_populates is the name of the relationship
@@ -40,7 +41,7 @@ class StockPrice(Base):
     dates = relationship('Date', back_populates='stock_prices')
 
     def __repr__(self):
-        return f"StockPrice(StockPriceId={self.StockPriceId!r}, StockSymbolId={self.StockSymbolId!r}), HighPrice={self.HighPrice!r}, LowPrice={self.LowPrice!r}, OpenPrice={self.OpenPrice!r}, ClosePrice={self.ClosePrice!r}, Volume={self.Volume!r}"
+        return f"StockPrice(StockPriceId={self.StockPriceId!r}, DateId={self.DateId!r}, StockSymbolId={self.StockSymbolId!r}), HighPrice={self.HighPrice!r}, LowPrice={self.LowPrice!r}, OpenPrice={self.OpenPrice!r}, ClosePrice={self.ClosePrice!r}, Volume={self.Volume!r}, Time={self.Time!r}"
 
 
 class Date(Base):
