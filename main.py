@@ -119,14 +119,16 @@ def graph_symbol_matplotlib(symbol, df):
 def main():
 
     chosen_symbols = random.choices(
-        nasdaq_100, k=1
+        nasdaq_100, k=10
     )  # temporarily use one symbol to test
     stock_data = {
         symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbols
     }
 
-    stocks_df = clean_data(stock_data, chosen_symbols[0], "60min")
-    # graph_symbol_matplotlib(chosen_symbols[0], stocks_df)
+    stocks_df = pd.DataFrame()
+    for symbol in chosen_symbols:
+        symbol_df = clean_data(stock_data, symbol, "60min")
+        stocks_df = pd.concat([stocks_df, symbol_df])
 
     connection = Connection()
     with connection._session as session:
