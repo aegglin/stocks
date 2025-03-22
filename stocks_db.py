@@ -1,7 +1,9 @@
+import pandas as pd
 import pyodbc
 import sqlalchemy as sa
 
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
 
 from secret_data import SERVER, DATABASE, USERNAME, PASSWORD
 
@@ -30,6 +32,11 @@ class Connection:
         connection_string = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={self._server};DATABASE={self._database};UID={self._username};PWD={self._password};Encrypt=no'
         conn = pyodbc.connect(connection_string)
         return conn
+
+    def _sa_execute(self, query):
+        result = self._conn.execute(query)
+        return pd.DataFrame(result)
+        
 
     def _query_pyodbc(self, query):
         cursor = self._conn.cursor()
