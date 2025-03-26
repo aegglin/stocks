@@ -5,12 +5,13 @@ import pandas as pd
 import requests
 from sqlalchemy import select
 
-from secret_data import ALPHA_VANTAGE_API_KEY
-from nasdaq import nasdaq_100
 from log import get_log
 from models import StockSymbol, StockPrice, Date
+from nasdaq import nasdaq_100
+from secret_data import ALPHA_VANTAGE_API_KEY
 from stocks_db import Connection
 
+from sklearn.ensemble import RandomForestClassifier
 
 log = get_log()
 
@@ -24,6 +25,17 @@ def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
     # log.info(json.dumps(data, indent=4))
 
     return data
+
+def linear_regression(symbol, start_date, end_date):
+    query = f"""SELECT *
+FROM Stocks.Ref.StockPrices
+WHERE Symbol={symbol}
+    AND [Date] BETWEEN {start_date} AND {end_date};
+    """
+
+    connection = Connection()
+    result = connection._sa_execute(query)
+
 
 
 def clean_data(data, symbol, interval):
