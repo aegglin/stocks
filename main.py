@@ -1,9 +1,13 @@
 import random
 
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import requests
+from scipy.stats.stats import pearsonr
+from sklearn import linear_model
 from sqlalchemy import select
+
 
 from log import get_log
 from models import StockSymbol, StockPrice, Date
@@ -11,7 +15,26 @@ from nasdaq import nasdaq_100
 from secret_data import ALPHA_VANTAGE_API_KEY
 from stocks_db import Connection
 
-from sklearn.ensemble import RandomForestClassifier
+
+"""
+    Ideas:
+         - Add more logging throughout
+         - Break up into multiple files/classes
+         - Update README.md
+
+         col names: 
+         StockPriceId
+            ,Symbol
+            ,Date
+            ,Time
+            ,HighPrice
+            ,LowPrice
+            ,OpenPrice
+            ,ClosePrice
+            ,Volume
+            ,DateId
+            ,StockSymbolId
+"""
 
 log = get_log()
 
@@ -35,6 +58,17 @@ WHERE Symbol='{symbol}'
 
     connection = Connection()
     result = connection._sa_execute(query)
+    
+    x = result['High']
+    y = result['Low']
+
+    corr, p = pearsonr(x, y)
+    
+    reg = linear_model.LinearRegression()
+    x_train = result['High']
+    y_train = result['Low']
+
+
 
 
 
