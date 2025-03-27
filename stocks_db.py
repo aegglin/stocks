@@ -34,8 +34,13 @@ class Connection:
         return conn
 
     def _sa_execute(self, query):
-        result = self._conn.execute(query)
-        return pd.DataFrame(result)
+        # Use a SQLAlchemy session for select
+        with self._session as session:
+            result = session.execute(text(query))
+            rows = result.fetchall()
+            columns = result.keys()
+
+        return pd.DataFrame(rows, columns=columns)
         
 
     def _query_pyodbc(self, query):

@@ -29,8 +29,8 @@ def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
 def linear_regression(symbol, start_date, end_date):
     query = f"""SELECT *
 FROM Stocks.Ref.StockPrices
-WHERE Symbol={symbol}
-    AND [Date] BETWEEN {start_date} AND {end_date};
+WHERE Symbol='{symbol}'
+    AND [Date] BETWEEN '{start_date}' AND '{end_date}';
     """
 
     connection = Connection()
