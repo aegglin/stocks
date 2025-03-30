@@ -59,17 +59,18 @@ WHERE Symbol='{symbol}'
     connection = Connection()
     result = connection._sa_execute(query)
     
-    x = result['High']
-    y = result['Low']
+    # Put data in the format that fit() expects
+    x = result['HighPrice'].values[:, np.newaxis]
+    y = result['LowPrice'].values
 
     corr, p = pearsonr(x, y)
-    
-    reg = linear_model.LinearRegression()
-    x_train = result['High']
-    y_train = result['Low']
 
+    model = linear_model.LinearRegression()
+    model.fit(x, y)
+    plt.scatter(x, y, color='g')
+    plt.plot(x, model.predict(x), color='k')
 
-
+    plt.show()
 
 
 def clean_data(data, symbol, interval):
