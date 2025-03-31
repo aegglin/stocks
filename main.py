@@ -49,7 +49,7 @@ def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
 
     return data
 
-def linear_regression(symbol, start_date, end_date):
+def linear_regression(symbol, start_date, end_date, cols):
     query = f"""SELECT *
 FROM Stocks.Ref.StockPrices
 WHERE Symbol='{symbol}'
@@ -59,11 +59,15 @@ WHERE Symbol='{symbol}'
     connection = Connection()
     result = connection._sa_execute(query)
     
+    x_col = cols[0]
+    y_col = cols[1]
+
     # Put data in the format that fit() expects
-    x = result['HighPrice'].values[:, np.newaxis]
-    y = result['LowPrice'].values
+    y = result[y_col].values[:, np.newaxis]
+    x = result[x_col].values
 
     corr, p = pearsonr(x, y)
+    log.info(f"Corr is: {corr}, p is: {p}")
 
     model = linear_model.LinearRegression()
     model.fit(x, y)
