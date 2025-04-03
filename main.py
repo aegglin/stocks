@@ -49,7 +49,7 @@ def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
 
     return data
 
-def linear_regression(symbol, start_date, end_date, cols):
+def linear_regression(symbol, start_date, end_date, x_col, y_col):
     query = f"""SELECT *
 FROM Stocks.Ref.StockPrices
 WHERE Symbol='{symbol}'
@@ -59,11 +59,10 @@ WHERE Symbol='{symbol}'
     connection = Connection()
     result = connection._sa_execute(query)
     
-    x_col = cols[0]
-    y_col = cols[1]
+    result = result[result['Symbol'] == symbol].copy()
 
     # Put data in the format that fit() expects
-    y = result[y_col].values[:, np.newaxis] # reshape ((-1, 1)) also will make this into one column and len(y) rows 
+    y = result[y_col].values[:, np.newaxis]
     x = result[x_col].values
 
     corr, p = pearsonr(x, y)
@@ -81,7 +80,7 @@ WHERE Symbol='{symbol}'
 
     plt.show()
 
-def multiple_linear_regression(symbol, start_date, end_date, cols):
+def multiple_linear_regression(symbol, start_date, end_date, x_cols, y_col):
     query = f"""SELECT *
 FROM Stocks.Ref.StockPrices
 WHERE Symbol='{symbol}'
@@ -90,13 +89,12 @@ WHERE Symbol='{symbol}'
 
     connection = Connection()
     result = connection._sa_execute(query)
-    
-    x_col = cols[0]
-    y_cols = cols[1]
+
+    result = result[result['Symbol'] == symbol].copy()
 
     # Put data in the format that fit() expects
-    y = result[y_cols].values.reshape ((-1, 1))
-    x = result[x_col].values
+    y = result[y_col].values.reshape((-1, 1))
+    x = result[x_cols].values.reshape((-1, len(x_cols)))
 
     corr, p = pearsonr(x, y)
     log.info(f"Corr is: {corr}, p is: {p}")
@@ -109,8 +107,7 @@ WHERE Symbol='{symbol}'
     log.info(f"intercept: {model.intercept_}") # scalar
     log.info(f"slope: {model.coef_}") # sarray
 
-    plt.scatter(x, y, color='g')
-    plt.plot(x, model.predict(x), color='k')
+    plt.plot(x, model.predict(x), color='g')
 
     plt.show()
 
