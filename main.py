@@ -50,7 +50,17 @@ def query_time_series_intraday_api(symbol, interval="60min", adjusted="true"):
     return data
 
 def linear_regression(symbol, start_date, end_date, x_col, y_col):
-    query = f"""SELECT *
+    query = f"""SELECT StockPriceId
+            ,Symbol
+            ,Date
+            ,Time
+            ,HighPrice
+            ,LowPrice
+            ,OpenPrice
+            ,ClosePrice
+            ,Volume
+            ,DateId
+            ,StockSymbolId
 FROM Stocks.Ref.StockPrices
 WHERE Symbol='{symbol}'
     AND [Date] BETWEEN '{start_date}' AND '{end_date}';
@@ -81,7 +91,17 @@ WHERE Symbol='{symbol}'
     plt.show()
 
 def multiple_linear_regression(symbol, start_date, end_date, x_cols, y_col):
-    query = f"""SELECT *
+    query = f"""SELECT StockPriceId
+            ,Symbol
+            ,Date
+            ,Time
+            ,HighPrice
+            ,LowPrice
+            ,OpenPrice
+            ,ClosePrice
+            ,Volume
+            ,DateId
+            ,StockSymbolId
 FROM Stocks.Ref.StockPrices
 WHERE Symbol='{symbol}'
     AND [Date] BETWEEN '{start_date}' AND '{end_date}';
