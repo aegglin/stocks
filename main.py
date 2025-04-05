@@ -85,8 +85,16 @@ WHERE Symbol='{symbol}'
     log.info(f"intercept: {model.intercept_}") # scalar
     log.info(f"slope: {model.coef_}") # sarray
 
-    plt.scatter(x, y, color='g')
-    plt.plot(x, model.predict(x), color='k')
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(15, 7))
+    ax.set_title(f'{symbol} Line of Best Fit')
+    ax.set_xlabel('$x$')
+    ax.set_xlim(xmin=x.min(), xmax=x.max())
+    ax.set_ylabel('$y$')
+    ax.set_ylim(ymin=y.min(), ymax=y.max())
+    ax.tick_params("x", rotation=45)
+    ax.plot(x, model.predict(x), color='#FD8A8A', linewidth=3)
+    ax.grid()
+    fig.tight_layout()
 
     plt.show()
 
