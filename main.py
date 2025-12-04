@@ -47,7 +47,7 @@ def clean_data(data, symbol, interval):
     stocks_df['Time'] = stocks_df['datetime'].dt.time
 
     # Update types
-    # stocks_df.index = pd.to_datetime(stocks_df.index)
+    stocks_df.index = pd.to_datetime(stocks_df.index)
     cols = ['open', 'high', 'low', 'close', 'volume']
     stocks_df[cols] = stocks_df[cols].astype(float)
 
