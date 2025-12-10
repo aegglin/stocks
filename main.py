@@ -8,10 +8,12 @@ from secret_data import api_keys
 
 
 def query_time_series_intraday_api(symbol, interval="60min", adjusted="true", api="AlphaVantage"):
-
-    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
-    r = requests.get(url)
-    data = r.json()
+    keys = api_keys[api]
+    data = pd.DataFrame()
+    for key in keys:
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
+        r = requests.get(url)
+        data = pd.concat([data, r.json()])
 
     return data
 
