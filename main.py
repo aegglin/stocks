@@ -7,21 +7,11 @@ from nasdaq import nasdaq_100
 from secret_data import api_keys
 
 
-def query_time_series_intraday_api(api, symbol, interval="60min", adjusted="true"):
+def query_time_series_intraday_api(symbol, interval="60min", adjusted="true", api="AlphaVantage"):
 
-    
-    data = {}
-    keys = api_keys[api]
-
-    for key in keys:
-        if key is not None:
-
-            if api == 'AlphaVantage':
-                url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
-                r = requests.get(url)
-                data = r.json()
-
-    # log.info(json.dumps(data, indent=4))
+    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
+    r = requests.get(url)
+    data = r.json()
 
     return data
 
@@ -68,7 +58,7 @@ def main():
 
     chosen_symbols = random.choices(
         nasdaq_100, k=10
-    )  # temporarily use one symbol to test
+    )
     stock_data = {
         symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbols
     }
