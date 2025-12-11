@@ -7,13 +7,13 @@ from nasdaq import nasdaq_100
 from secret_data import api_keys
 
 
-def query_time_series_intraday_api(symbol, interval="60min", adjusted="true", api="AlphaVantage"):
+def query_time_series_intramonth_api(symbol, interval="60min", adjusted="true", api="AlphaVantage"):
     keys = api_keys[api]
-    data = pd.DataFrame()
+    data = {}
     for key in keys:
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
         r = requests.get(url)
-        data = pd.concat([data, r.json()])
+        data | r.json()
 
     return data
 
@@ -62,7 +62,7 @@ def main():
         nasdaq_100, k=10
     )
     stock_data = {
-        symbol: query_time_series_intraday_api(symbol) for symbol in chosen_symbols
+        symbol: query_time_series_intramonth_api(symbol) for symbol in chosen_symbols
     }
 
     stocks_df = pd.DataFrame()
