@@ -4,23 +4,22 @@ import pandas as pd
 import requests
 
 from nasdaq import nasdaq_100
-from secret_data import api_keys
+from secret_data import ALPHA_VANTAGE_API_KEY
 
 
 def query_time_series_intramonth_api(symbol, interval="60min", adjusted="true", api="AlphaVantage"):
-    keys = api_keys[api]
-    data = {}
-    for key in keys:
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
-        r = requests.get(url)
-        data | r.json()
+
+    key = ALPHA_VANTAGE_API_KEY
+    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
+    r = requests.get(url)
+    data = r.json()
 
     return data
 
 
-def clean_data(data, symbol, interval):
-
-    time_series = data[symbol][f"Time Series ({interval})"]
+def clean_data(data, symbol):
+    print(data)
+    time_series = data[symbol]['Meta Data']['Monthly Time Series']
     for date, values in time_series.items():
         cleaned_dict = {}
         for stat_name, value in values.items():
@@ -67,10 +66,10 @@ def main():
 
     stocks_df = pd.DataFrame()
     for symbol in chosen_symbols:
-        symbol_df = clean_data(stock_data, symbol, "60min")
+        symbol_df = clean_data(stock_data, symbol)
         stocks_df = pd.concat([stocks_df, symbol_df])
     
     stocks_df = stocks_df.reset_index()
-
+    stocks_df.to_csv('result.csv')
 if __name__ == "__main__":
     main()
