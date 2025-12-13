@@ -8,7 +8,7 @@ from secret_data import ALPHA_VANTAGE_API_KEY
 
 
 def query_time_series_intramonth_api(symbol, interval="60min", adjusted="true", api="AlphaVantage"):
-
+    """Query API for intramonth data."""
     key = ALPHA_VANTAGE_API_KEY
     url = f"https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol={symbol}&interval={interval}&adjusted={adjusted}&apikey={key}"
     r = requests.get(url)
@@ -57,7 +57,7 @@ def clean_data(data, symbol):
 
 
 def main():
-
+    """Main entry point."""
     chosen_symbols = random.choices(
         nasdaq_100, k=10
     )
