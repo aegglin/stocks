@@ -19,8 +19,7 @@ def query_time_series_intramonth_api(symbol, interval="60min", adjusted="true", 
 
 def clean_data(data, symbol):
     """Cleans and transforms the dataset for a given symbol."""
-    print(data)
-    time_series = data[symbol]['Meta Data']['Monthly Time Series']
+    time_series = data[symbol]['Monthly Time Series']
     for date, values in time_series.items():
         cleaned_dict = {}
         for stat_name, value in values.items():
