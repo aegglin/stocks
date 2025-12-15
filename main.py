@@ -25,32 +25,29 @@ def clean_data(data, symbol):
         for stat_name, value in values.items():
             stat_name = (
                 stat_name.replace("1. ", "")
-                .replace("2. ", "")
-                .replace("3. ", "")
-                .replace("4. ", "")
-                .replace("5. ", "")
+                    .replace("2. ", "")
+                    .replace("3. ", "")
+                    .replace("4. ", "")
+                    .replace("5. ", "")
             )
             cleaned_dict[stat_name] = value
 
         time_series[date] = cleaned_dict
 
-    stocks_df = pd.DataFrame(time_series)
-    # Transpose the dataframe so the dates are rows
-    stocks_df = stocks_df.T
+        stocks_df = pd.DataFrame(time_series)
+        # Transpose the dataframe so the dates are rows
+        stocks_df = stocks_df.T
 
-    stocks_df = stocks_df.reset_index(names='datetime')
-    stocks_df['datetime'] = pd.to_datetime(stocks_df['datetime'])
+        stocks_df['Date'] = pd.to_datetime(stocks_df['datetime']).dt.date
 
-    stocks_df['Date'] = stocks_df['datetime'].dt.date
-    stocks_df['Time'] = stocks_df['datetime'].dt.time
+        stocks_df = stocks_df.drop(columns=['datetime'])
 
-    # Update types
-    stocks_df.index = pd.to_datetime(stocks_df.index)
-    cols = ['open', 'high', 'low', 'close', 'volume']
-    stocks_df[cols] = stocks_df[cols].astype(float)
+        # Update types
+        cols = ['open', 'high', 'low', 'close', 'volume']
+        stocks_df[cols] = stocks_df[cols].astype(float)
 
-    stocks_df = stocks_df.rename(columns= {'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume': 'Volume'})
-    stocks_df['StockSymbol'] = symbol
+        stocks_df = stocks_df.rename(columns= {'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume': 'Volume'})
+        stocks_df['StockSymbol'] = symbol
 
     return stocks_df
 
