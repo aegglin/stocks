@@ -39,7 +39,6 @@ def clean_data(data, symbol):
         stocks_df = stocks_df.T
 
         stocks_df['Date'] = pd.to_datetime(stocks_df['datetime']).dt.date
-
         stocks_df = stocks_df.drop(columns=['datetime'])
 
         # Update types
