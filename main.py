@@ -67,6 +67,5 @@ def main():
         stocks_df = pd.concat([stocks_df, symbol_df])
     
     stocks_df = stocks_df.reset_index()
-    stocks_df.to_csv('result.csv')
 if __name__ == "__main__":
     main()
