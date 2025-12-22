@@ -67,5 +67,6 @@ def main():
         stocks_df = pd.concat([stocks_df, symbol_df])
     
     stocks_df = stocks_df.reset_index()
+    
 if __name__ == "__main__":
     main()
