@@ -38,10 +38,6 @@ def clean_data(data, symbol):
         # Transpose the dataframe so the dates are rows
         stocks_df = stocks_df.T
 
-        # Convert series to date
-        stocks_df['Date'] = pd.to_datetime(stocks_df['datetime']).dt.date
-        stocks_df = stocks_df.drop(columns=['datetime'])
-
         # Update types
         cols = ['open', 'high', 'low', 'close', 'volume']
         stocks_df[cols] = stocks_df[cols].astype(float)
