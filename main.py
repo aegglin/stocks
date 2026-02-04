@@ -3,6 +3,8 @@ import random
 import pandas as pd
 import requests
 
+import boto3
+
 from nasdaq import nasdaq_100
 from secret_data import ALPHA_VANTAGE_API_KEY
 
@@ -64,6 +66,9 @@ def main():
     
     stocks_df = stocks_df.reset_index()
     stocks_df.to_parquet('stocks.parquet', index=False)
+
+    s3 = boto3.client('s3')
+    s3.upload_file('stocks.parquet', 'TestBucket', 'stocks/stocks.parquet')
 
 if __name__ == "__main__":
     main()
