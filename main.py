@@ -65,10 +65,11 @@ def main():
         stocks_df = pd.concat([stocks_df, symbol_df])
     
     stocks_df = stocks_df.reset_index()
-    stocks_df.to_parquet('stocks.parquet', index=False)
+    FILENAME = 'stocks.parquet'
+    stocks_df.to_parquet(FILENAME, index=False)
 
     s3 = boto3.client('s3')
-    s3.upload_file('stocks.parquet', 'TestBucket', 'stocks/stocks.parquet')
-
+    with open(FILENAME, 'rb') as f:
+        s3.upload_file(f, 'stocks-data-azoek382', f'stocks/{FILENAME}')
 if __name__ == "__main__":
     main()
