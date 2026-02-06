@@ -68,8 +68,9 @@ def main():
     FILENAME = 'stocks.parquet'
     stocks_df.to_parquet(FILENAME, index=False)
 
-    s3 = boto3.client('s3')
-    with open(FILENAME, 'rb') as f:
-        s3.upload_file(f, 'stocks-data-azoek382', f'stocks/{FILENAME}')
+    s3 = boto3.resource('s3')
+    with open(FILENAME, 'r') as f:
+        s3.upload_file(FILENAME, 'stocks-data-azoek382', f'stocks/{FILENAME}')
+
 if __name__ == "__main__":
     main()
