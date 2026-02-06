@@ -65,9 +65,11 @@ def main():
         stocks_df = pd.concat([stocks_df, symbol_df])
     
     stocks_df = stocks_df.reset_index()
+    # Save the file as parquet
     FILENAME = 'stocks.parquet'
     stocks_df.to_parquet(FILENAME, index=False)
 
+    # Upload the parquet file to s3
     s3 = boto3.resource('s3')
     with open(FILENAME, 'r') as f:
         s3.upload_file(FILENAME, 'stocks-data-azoek382', f'stocks/{FILENAME}')
